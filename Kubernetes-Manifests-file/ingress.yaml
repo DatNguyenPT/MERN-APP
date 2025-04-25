@@ -4,13 +4,12 @@ metadata:
   name: mainlb
   namespace: three-tier
   annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # Tự động chuyển hướng HTTP -> HTTPS
+    nginx.ingress.kubernetes.io/secure-backends: "true"  # Kết nối backend qua HTTPS
 spec:
-  ingressClassName: alb
+  ingressClassName: nginx
   rules:
-    - host: amanpathakdevops.study
+    - host: dannythesec.online
       http:
         paths:
           - path: /api
@@ -48,3 +47,7 @@ spec:
                 name: frontend
                 port:
                   number: 3000
+  tls:
+    - hosts:
+        - dannythesec.online  
+      secretName: app-ssl-cert  
