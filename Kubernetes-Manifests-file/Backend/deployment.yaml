@@ -22,11 +22,11 @@ spec:
         role: api
     spec:
       imagePullSecrets:
-      - name: ecr-registry-secret
+      - name: ecr-secret
       containers:
       - name: api
-        image: 407622020962.dkr.ecr.us-east-1.amazonaws.com/backend:1
-        imagePullPolicy: Always
+        image: 533267145447.dkr.ecr.us-east-1.amazonaws.com/private-repo:backend-v1.0.0
+        imagePullPolicy: ifNotPresent
         env:
           - name: MONGO_CONN_STR
             value: mongodb://mongodb-svc:27017/todo?directConnection=true
