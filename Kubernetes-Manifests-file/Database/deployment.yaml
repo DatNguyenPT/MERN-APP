@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: mongodb
   namespace: three-tier
+  labels:
+    app: mongodb
+    tier: database
 spec:
   replicas: 1
   strategy:
@@ -12,6 +15,10 @@ spec:
       app: mongodb
       tier: database
   template:
+    metadata:
+      labels:
+        app: mongodb
+        tier: database
     spec:
       securityContext:
         fsGroup: 999
