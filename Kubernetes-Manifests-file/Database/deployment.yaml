@@ -1,34 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata: 
-  namespace: three-tier
+metadata:
   name: mongodb
-  labels:
-    app: mongodb
-    tier: database
-spec: 
+  namespace: three-tier
+spec:
   replicas: 1
   strategy:
-    type: Recreate  
+    type: Recreate
   selector:
     matchLabels:
       app: mongodb
+      tier: database
   template:
-    metadata:
-      labels: 
-        app: mongodb
-    spec: 
+    spec:
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+        runAsGroup: 999
+      initContainers:
+      - name: fix-permissions
+        image: busybox
+        command: ['sh', '-c', 'chown -R 999:999 /data/db']
+        volumeMounts:
+        - name: mongo-volume
+          mountPath: /data/db
       containers:
       - name: mongodb
         image: mongo:4.4.6
         command:
-            - "numactl"
-            - "--interleave=all"
-            - "mongod"
-            - "--wiredTigerCacheSizeGB"
-            - "0.1"
-            - "--bind_ip"
-            - "0.0.0.0"
+          - "numactl"
+          - "--interleave=all"
+          - "mongod"
+          - "--wiredTigerCacheSizeGB"
+          - "0.1"
+          - "--bind_ip"
+          - "0.0.0.0"
         ports:
         - containerPort: 27017
           name: mongodb
@@ -39,38 +45,21 @@ spec:
           limits:
             cpu: "500m"
             memory: "512Mi"
-        env: 
-          - name: MONGO_INITDB_ROOT_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: mongo-sec
-                key: username
-          - name: MONGO_INITDB_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mongo-sec
-                key: password
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-sec
+              key: username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-sec
+              key: password
         volumeMounts:
-          - name: mongo-volume
-            mountPath: /data/db
-        livenessProbe:
-          tcpSocket:
-            port: mongodb
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          tcpSocket:
-            port: mongodb
-          initialDelaySeconds: 5
-          periodSeconds: 10
-          timeoutSeconds: 5
-      volumes: 
+        - name: mongo-volume
+          mountPath: /data/db
+      volumes:
       - name: mongo-volume
         persistentVolumeClaim:
           claimName: mongo-volume-claim
-      securityContext:
-        fsGroup: 999
-        runAsUser: 999
-        runAsGroup: 999
