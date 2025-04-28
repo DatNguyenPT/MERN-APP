@@ -29,7 +29,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
           - name: MONGO_CONN_STR
-            value: mongodb://$(MONGO_USERNAME):$(MONGO_PASSWORD)@mongodb-svc.three-tier.svc.cluster.local:27017/todo?directConnection=true&authSource=admin
+            value: mongodb://mongodb-svc:27017/todo?directConnection=true
           - name: MONGO_USERNAME
             valueFrom:
               secretKeyRef:
