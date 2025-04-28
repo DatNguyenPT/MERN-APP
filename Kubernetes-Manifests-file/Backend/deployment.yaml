@@ -29,10 +29,7 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
           - name: MONGO_CONN_STR
-            valueFrom:
-              configMapKeyRef:
-                name: mongo-config
-                key: connection_string
+            value: mongodb://mongodb-svc:27017/todo?directConnection=true
           - name: MONGO_USERNAME
             valueFrom:
               secretKeyRef:
