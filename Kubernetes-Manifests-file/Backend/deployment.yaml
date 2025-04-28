@@ -26,7 +26,7 @@ spec:
       containers:
       - name: api
         image: ${REPOSITORY_URI}/${AWS_ECR_REPO_NAME}:backend-v${BE_VERSION}
-        imagePullPolicy: ifNotPresent
+        imagePullPolicy: IfNotPresent
         env:
           - name: MONGO_CONN_STR
             valueFrom:
