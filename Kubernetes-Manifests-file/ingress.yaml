@@ -3,14 +3,10 @@ kind: Ingress
 metadata:
   name: mainlb
   namespace: three-tier
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # Tự động chuyển hướng HTTP -> HTTPS
-    nginx.ingress.kubernetes.io/secure-backends: "true"  # Kết nối backend qua HTTPS
 spec:
   ingressClassName: nginx
   rules:
-    - host: dannythesec.online
-      http:
+    - http:
         paths:
           - path: /api
             pathType: Prefix
@@ -47,7 +43,3 @@ spec:
                 name: frontend
                 port:
                   number: 3000
-  tls:
-    - hosts:
-        - dannythesec.online  
-      secretName: app-ssl-cert  
