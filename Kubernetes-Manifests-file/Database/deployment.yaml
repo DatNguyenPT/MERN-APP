@@ -21,7 +21,7 @@ spec:
         tier: database
     spec:
       securityContext:
-        fsGroup: 999
+        fsGroup: 999  # Ensure MongoDB has the proper file system group permissions
         runAsUser: 999
         runAsGroup: 999
       initContainers:
@@ -31,11 +31,11 @@ spec:
         - sh
         - -c
         - |
-          mkdir -p /data/db &&
-          chmod -R 777 /data/db &&
+          mkdir -p /data/db && 
+          chmod -R 777 /data/db && 
           chown -R 999:999 /data/db
         securityContext:
-          runAsUser: 0
+          runAsUser: 0  # Running as root to ensure permission changes
         volumeMounts:
         - name: mongo-volume
           mountPath: /data/db
