@@ -26,7 +26,7 @@ spec:
       containers:
       - name: frontend
         # Use variables instead of hardcoded values
-        image: ${REPOSITORY_URI}/${AWS_ECR_REPO_NAME}:frontend-v${FE_VERSION}
+        image: 533267145447.dkr.ecr.us-east-1.amazonaws.com/private-repo:frontend-v1.0.0
         imagePullPolicy: IfNotPresent
         env:
           - name: REACT_APP_BACKEND_URL
